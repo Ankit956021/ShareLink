@@ -326,8 +326,8 @@ curl -X POST http://localhost:5001/api/newsletter/subscribe \
 ## 📞 Support
 
 - **Email**: ankit.meena@outlook.in
-- **GitHub**: [@ankitmeena023](https://github.com/ankitmeena023)
-- **LinkedIn**: [ankitmeena023](https://linkedin.com/in/ankitmeena023)
+- **GitHub**: [@ankit956021](https://github.com/ankit956021)
+- **LinkedIn**: [ankit950](https://linkedin.com/in/ankit950)
 
 ## 📄 License
 
