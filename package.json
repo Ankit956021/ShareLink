@@ -1,0 +1,23 @@
+{
+  "name": "sharelink-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["file-sharing", "upload", "download", "qr-code", "pin-protection"],
+  "author": "Ankit Meena <ankit.meena@outlook.in>",
+  "license": "MIT",
+  "description": "Instant file sharing app with beautiful UI, PIN protection, and QR codes",
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "crypto-js": "^4.2.0",
+    "express": "^5.1.0",
+    "mime-types": "^3.0.1",
+    "multer": "^2.0.2",
+    "qrcode": "^1.5.4",
+    "uuid": "^11.1.0"
+  }
+}

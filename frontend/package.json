@@ -1,0 +1,25 @@
+{
+  "name": "sharelink-frontend",
+  "version": "1.0.0",
+  "description": "ShareLink Frontend - Beautiful file sharing interface",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "prod": "NODE_ENV=production node server.js",
+    "docker:build": "docker build -t sharelink-frontend .",
+    "docker:run": "docker run -p 3001:3001 sharelink-frontend"
+  },
+  "keywords": [
+    "file-sharing",
+    "frontend",
+    "html",
+    "javascript"
+  ],
+  "author": "Ankit Meena <ankit.meena@outlook.in>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}

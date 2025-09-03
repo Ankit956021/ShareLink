@@ -1,0 +1,94 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    # Heroku Deployment
+    - name: Deploy to Heroku Backend
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: "sharelink-backend-prod"
+        heroku_email: ${{ secrets.HEROKU_EMAIL }}
+        appdir: "backend"
+        dockerfile_directory: "backend"
+        dockerfile_name: "Dockerfile"
+        process_type: "web"
+    
+    - name: Deploy to Heroku Frontend
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: "sharelink-frontend-prod"
+        heroku_email: ${{ secrets.HEROKU_EMAIL }}
+        appdir: "frontend"
+        dockerfile_directory: "frontend"
+        dockerfile_name: "Dockerfile"
+        process_type: "web"
+    
+    # Vercel Deployment (Alternative)
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v20
+      if: false  # Disable by default, enable if using Vercel
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.ORG_ID }}
+        vercel-project-id: ${{ secrets.PROJECT_ID }}
+        working-directory: ./frontend
+    
+    # Digital Ocean App Platform (Alternative)
+    - name: Deploy to DigitalOcean App Platform
+      uses: digitalocean/app_action@v1.1.5
+      if: false  # Disable by default, enable if using DO
+      with:
+        app_name: sharelink
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        images: '[
+          {
+            "name": "backend",
+            "image": {
+              "registry_type": "DOCKER_HUB",
+              "repository": "sharelink-backend",
+              "tag": "latest"
+            }
+          },
+          {
+            "name": "frontend", 
+            "image": {
+              "registry_type": "DOCKER_HUB",
+              "repository": "sharelink-frontend",
+              "tag": "latest"
+            }
+          }
+        ]'
+
+  notification:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: always()
+    
+    steps:
+    - name: Notify deployment status
+      uses: 8398a7/action-slack@v3
+      if: false  # Disable by default, enable if using Slack
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}

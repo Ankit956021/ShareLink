@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  sharelink-backend:
+    build: ./backend
+    container_name: sharelink-backend
+    ports:
+      - "5001:5001"
+    volumes:
+      - backend-uploads:/app/uploads
+      - backend-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+    restart: unless-stopped
+    networks:
+      - sharelink-network
+
+  sharelink-frontend:
+    build: ./frontend
+    container_name: sharelink-frontend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - API_BASE=http://sharelink-backend:5001/api
+    depends_on:
+      - sharelink-backend
+    restart: unless-stopped
+    networks:
+      - sharelink-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: sharelink-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - sharelink-frontend
+      - sharelink-backend
+    restart: unless-stopped
+    networks:
+      - sharelink-network
+
+volumes:
+  backend-uploads:
+    driver: local
+  backend-data:
+    driver: local
+
+networks:
+  sharelink-network:
+    driver: bridge
